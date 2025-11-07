@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AURA</title>
+<link rel="stylesheet" href="aura.css">
+<style>
+:root{
+  --bg:#0a0a0a; --bg-2:#0c0c0c; --card:rgba(20,20,22,.74);
+  --muted:#2a2a2e; --text:#ececee; --text-dim:#a7a7ac;
+  --success:#2aa772; --danger:#e86868; --ring:0 0 0 1px var(--muted);
+  --shadow:0 20px 50px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;color:var(--text);font-family:system-ui,Inter,Segoe UI,Arial;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255,255,255,.035), transparent 50%),
+    radial-gradient(1200px 600px at 90% 110%, rgba(255,255,255,.025), transparent 50%),
+    linear-gradient(180deg, var(--bg), var(--bg-2) 30%, var(--bg) 100%);
+  overflow-x:hidden;
+}
+.container{max-width:1120px;margin:38px auto;padding:0 20px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+h1{margin:0;font-weight:900;letter-spacing:.2px}
+.subtitle{opacity:.7;margin-top:4px;font-size:14px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  border:1px solid var(--muted);background:linear-gradient(180deg,#121215,#0d0e11);
+  color:var(--text);padding:9px 12px;border-radius:12px;cursor:pointer;
+  transition:transform .08s ease, background .18s ease, box-shadow .18s ease;
+  box-shadow:var(--shadow)
+}
+.btn:hover{box-shadow:0 12px 30px rgba(0,0,0,.35); background:#14161b}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.6;cursor:not-allowed;box-shadow:none}
+.switch{display:flex;align-items:center;gap:8px;border:1px solid var(--muted);padding:6px 10px;border-radius:999px;background:#0f1012}
+.switch input{appearance:none;width:34px;height:20px;border-radius:999px;background:#1a1b1f;position:relative;outline:none;border:1px solid var(--muted);cursor:pointer}
+.switch input:before{content:"";position:absolute;inset:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#ddd;transition:left .15s ease}
+.switch input:checked:before{left:16px}
+.card{
+  background:var(--card);border:1px solid rgba(60,60,68,.65);
+  border-radius:18px; padding:16px; margin-bottom:16px;
+  box-shadow:0 10px 40px rgba(0,0,0,.45); backdrop-filter: blur(8px)
+}
+.input-card{position:relative;overflow:hidden}
+textarea{width:100%;padding:14px 14px 42px;border-radius:14px;border:1px solid var(--muted);
+  background:#0e0f12;color:var(--text);resize:none;min-height:120px;outline:none;
+  transition:border .2s ease, box-shadow .2s ease, transform .15s ease}
+textarea:focus{box-shadow:0 0 0 2px rgba(255,255,255,.05), var(--ring)}
+.counter{position:absolute;right:16px;bottom:12px;font-size:12px;color:var(--text-dim)}
+.controls{display:flex;align-items:center;gap:12px;margin-top:10px}
+.spinner{display:inline-block;width:18px;height:18px;border:3px solid #2a2a2e;border-top-color:#ddd;border-radius:50%;animation:spin 1s linear infinite;margin-left:8px;vertical-align:-3px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.notice{font-size:12px;opacity:.6;margin-top:10px}
+.hotline{margin-top:8px;font-size:13px;color:var(--danger);display:none}
+.quick{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:linear-gradient(180deg,#14151a,#111216);border:1px solid var(--muted);
+  color:var(--text);padding:7px 11px;border-radius:999px;font-size:12px;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:1000px){.grid{grid-template-columns:1.1fr .9fr}}
+.section-title{font-size:12px;opacity:.75;margin:6px 0 4px}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:#17191f;border:1px solid var(--muted);border-radius:999px;padding:6px 10px;font-size:12px}
+.badge{padding:6px 10px;border-radius:999px;border:1px solid var(--muted);display:inline-block;background:#16181c}
+.badge.positive{border-color:#2b7}.badge.negative{border-color:#e66}.badge.neutral{border-color:#888}
+.tabs{display:flex;gap:6px;background:#0f1013;border:1px solid var(--muted);padding:6px;border-radius:12px;flex-wrap:wrap}
+.tab{flex:1;min-width:160px;text-align:center;padding:8px;border-radius:8px;cursor:pointer}
+.tab.active{background:#171921}
+.panel{border:1px solid var(--muted);border-radius:14px;padding:12px;background:#101216}
+.plan-list{margin:10px 0 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.plan-item{display:flex;align-items:center;gap:10px;background:#0f1013;border:1px solid var(--muted);padding:10px;border-radius:12px}
+.plan-item input{width:auto}
+.plan-note{flex:1;border:1px dashed #2a2a2e;border-radius:10px;background:#0e0f12;color:#ddd;padding:8px}
+.progress-wrap{margin:10px 0 6px}
+.progress{height:10px;background:#0d0f12;border:1px solid var(--muted);border-radius:999px;overflow:hidden}
+.progress>span{display:block;height:100%;background:linear-gradient(90deg,#2aa772,#57d39e);width:0%}
+.board{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.board-col{background:#0f1013;border:1px solid var(--muted);border-radius:12px;padding:10px;min-height:120px}
+.board-title{font-size:12px;opacity:.8;margin-bottom:6px}
+.history{margin-top:8px;display:grid;gap:8px}
+.hist-card{background:#121318;border:1px solid var(--muted);border-radius:12px;padding:10px;cursor:pointer}
+.meta{font-size:12px;color:var(--text-dim)}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#121315;border:1px solid var(--muted);color:var(--text);padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
+/* skeleton placeholder */
+.skel{border:1px solid #2a2a2e;background:#101115;border-radius:12px;overflow:hidden}
+.skel-line{height:12px;background:linear-gradient(90deg,#17191f 25%,#1b1d23 37%,#17191f 63%);background-size:400% 100%;animation:sk 1.2s ease infinite}
+.skel-gap{height:10px}
+@keyframes sk{0%{background-position:100% 0}100%{background-position:-100% 0}}
+/* command palette */
+#cmdk{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;padding-top:10vh;z-index:99}
+#cmdk .box{width:min(720px,92vw);background:#111216;border:1px solid #2a2a2e;border-radius:16px;box-shadow:var(--shadow);padding:12px}
+#cmdk input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a2a2e;background:#0e0f12;color:#eee}
+.cmdk-list{margin-top:10px;max-height:50vh;overflow:auto;display:grid;gap:8px}
+.cmdk-item{padding:10px;border:1px solid #2a2a2e;background:#0f1013;border-radius:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>AURA</h1>
+      <div class="subtitle">AI Root-Cause & Emotional Reasoning Assistant</div>
+    </div>
+    <div class="toolbar">
+      <label class="switch"><span style="font-size:12px;opacity:.75">Board</span><input id="toggle-view" type="checkbox"></label>
+      <button class="btn" id="btn-cmdk">⌘K</button>
+      <button class="btn" id="btn-export">⬇️ Export JSON</button>
+      <button class="btn" id="btn-clear">🧹 Clear</button>
+    </div>
+  </div>
+
+  <div class="card input-card">
+    <textarea id="text" rows="5" placeholder="Tell AURA what's going on..."></textarea>
+    <div class="counter" id="counter">0 chars</div>
+    <div class="controls">
+      <button class="btn" id="go">Analyze <span class="hint" style="opacity:.65;margin-left:6px"><kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd></span></button>
+      <span id="loading" style="display:none;">Thinking<span class="spinner"></span></span>
+    </div>
+    <div class="quick" id="quick">
+      <span class="chip">I keep missing study deadlines and feel anxious</span>
+      <span class="chip">I argue with my friend and it drains me</span>
+      <span class="chip">I’m overwhelmed with tasks and can’t focus</span>
+      <span class="chip">Money stress is making me panic</span>
+      <span class="chip">I feel lonely and unmotivated lately</span>
+    </div>
+    <div class="notice">AURA is an AI assistant for reflection, not therapy or medical advice.</div>
+    <div class="hotline" id="hotline">If you feel unsafe, contact local emergency services or a crisis hotline (US: 988).</div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div id="out"></div>
+      <div class="footer-note" style="opacity:.55;font-size:12px;text-align:center;margin:18px 0">
+        All data is kept in your browser. You can export or clear it any time.
+      </div>
+    </div>
+    <div class="aside">
+      <div class="card">
+        <div class="section-title">Session History</div>
+        <div class="history" id="history"></div>
+        <div class="meta">Stores last 10 analyses locally.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cmdk">
+  <div class="box">
+    <input id="cmdk-input" placeholder="Type to insert a prompt or run an action… (Esc to close)" />
+    <div class="cmdk-list" id="cmdk-list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied</div>
+
+<script>
+const api = (location.hostname==="localhost" || location.protocol==="file:")?"http://localhost:8000":"";
+const crisisWords = ["suicide","kill myself","hurt myself","self-harm","end it","jump off","overdose"];
+const textEl = document.getElementById("text");
+const btn = document.getElementById("go");
+const loader = document.getElementById("loading");
+const hotline = document.getElementById("hotline");
+const out = document.getElementById("out");
+const historyEl = document.getElementById("history");
+const toast = document.getElementById("toast");
+const counter = document.getElementById("counter");
+const viewToggle = document.getElementById("toggle-view");
+const cmdk = document.getElementById("cmdk");
+const cmdkInput = document.getElementById("cmdk-input");
+const cmdkList = document.getElementById("cmdk-list");
+
+const SESS_KEY = "aura_sessions_v4";
+const PLAN_PROGRESS_KEY = "aura_plan_progress_v4";
+const PLAN_NOTES_KEY = "aura_plan_notes_v1";
+
+function showToast(msg){ toast.textContent = msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1400); }
+function autosize(){ textEl.style.height="auto"; textEl.style.height=Math.min(360,Math.max(120,textEl.scrollHeight))+"px"; counter.textContent=`${textEl.value.length} chars`; }
+textEl.addEventListener("input", ()=>{ autosize(); const t=textEl.value.toLowerCase(); hotline.style.display=crisisWords.some(x=>t.includes(x))?"block":"none";});
+autosize();
+
+document.getElementById("btn-clear").onclick=()=>{ textEl.value=""; autosize(); out.innerHTML=""; };
+document.getElementById("btn-export").onclick=()=>{ const data=JSON.stringify(loadSessions(),null,2); const blob=new Blob([data],{type:"application/json"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="aura_sessions.json"; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500); };
+document.getElementById("quick").addEventListener("click",(e)=>{ if(e.target.classList.contains("chip")){ textEl.value=e.target.textContent; autosize(); textEl.focus(); }});
+document.addEventListener("keydown",(e)=>{ if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ analyze(); } if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){ e.preventDefault(); openCmdk(); } if(e.key==="Escape"){ closeCmdk(); }});
+btn.onclick=analyze;
+
+viewToggle.onchange=()=>{ const sess=loadSessions()[0]; if(sess) renderResult(sess.data, sess.input); };
+
+function skeleton(){
+  out.innerHTML = `
+  <div class="card">
+    <div class="skel" style="padding:12px">
+      <div class="skel-line" style="width:40%"></div><div class="skel-gap"></div>
+      <div class="skel-line" style="width:60%"></div><div class="skel-gap"></div>
+      <div class="skel-line" style="width:80%"></div><div class="skel-gap"></div>
+      <div class="skel-line" style="width:55%"></div>
+    </div>
+  </div>`;
+}
+
+async function analyze(){
+  const text=textEl.value.trim();
+  if(!text) return;
+  skeleton();
+  hotline.style.display=crisisWords.some(x=>text.toLowerCase().includes(x))?"block":"none";
+  btn.disabled=true; btn.textContent="Analyzing..."; loader.style.display="inline-block";
+  try{
+    const r=await fetch(api+"/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+    if(!r.ok){ throw new Error(`API ${r.status}: ${await r.text()}`); }
+    const j=await r.json();
+    renderResult(j,text); saveSession(j,text); renderHistory();
+    window.scrollTo({top:out.offsetTop-10, behavior:'smooth'});
+  }catch(err){ alert("Request failed: "+err.message+"\nMake sure the API is running at http://localhost:8000"); }
+  finally{ btn.disabled=false; btn.textContent="Analyze"; loader.style.display="none"; }
+}
+
+function pillSentiment(s){ const cls=s==="positive"?"positive":(s==="negative"?"negative":"neutral"); return `<span class="badge ${cls}">${s}</span>`; }
+function percent(n,d){ return d===0?0:Math.round((n/d)*100); }
+
+function renderResult(j,inputText){
+  const planKey=`${j.inference_id}`;
+  const progress=loadPlanProgress(planKey);
+  const notes=loadPlanNotes(planKey);
+  const done=Object.values(progress).filter(Boolean).length;
+  const total=j.plan.actions.length;
+  const pct=percent(done,total);
+
+  let actionsList=j.plan.actions.map((a,i)=>{
+    const key=`${planKey}:${i}`; const checked=progress[key]?"checked":""; const note=notes[key]||"";
+    return `<label class="plan-item">
+      <input type="checkbox" data-plan="${planKey}" data-step="${i}" ${checked}>
+      <div style="flex:1">
+        <div><strong>Day ${a.day}</strong> — ${a.task}</div>
+        <input class="plan-note" placeholder="Add a note…" data-note="${planKey}" data-step="${i}" value="${escapeHtml(note)}">
+      </div>
+    </label>`;
+  }).join("");
+
+  const boardCols = Array.from({length:7},(_,d)=>d+1).map(day=>{
+    const items = j.plan.actions.map((a,i)=>({a,i})).filter(o=>o.a.day===day).map(({a,i})=>{
+      const key=`${planKey}:${i}`; const checked=progress[key]?"checked":""; const note=notes[key]||"";
+      return `<label class="plan-item">
+        <input type="checkbox" data-plan="${planKey}" data-step="${i}" ${checked}>
+        <div style="flex:1">
+          <div>${a.task}</div>
+          <input class="plan-note" placeholder="Note…" data-note="${planKey}" data-step="${i}" value="${escapeHtml(note)}">
+        </div>
+      </label>`;
+    }).join("");
+    return `<div class="board-col"><div class="board-title">Day ${day}</div>${items||'<div class="meta">—</div>'}</div>`;
+  }).join("");
+
+  out.innerHTML=`
+  <div class="card">
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px">
+      <div><div class="section-title">Emotion</div><div class="tags"><span class="tag">${j.emotion}</span></div></div>
+      <div><div class="section-title">Sentiment</div>${pillSentiment(j.sentiment)}</div>
+      <div><div class="section-title">Metric</div><span class="badge">${j.plan.metric}</span></div>
+      <div><div class="section-title">Completion</div><span class="badge">${pct}%</span></div>
+    </div>
+
+    <div class="tabs" style="margin-top:10px">
+      <div class="tab active" data-name="panel-understand">Understanding</div>
+      <div class="tab" data-name="panel-plan">7-Day Plan</div>
+    </div>
+
+    <div id="panel-understand" class="panel" style="margin-top:10px">
+      <div class="grid" style="gap:14px">
+        <div>
+          <div class="section-title">Facets</div>
+          <div class="tags">${j.facets.map(x=>`<span class="tag">${x}</span>`).join("")}</div>
+          <div class="section-title">Distortions</div>
+          <div class="tags">${j.distortions.map(x=>`<span class="tag">${x}</span>`).join("")}</div>
+        </div>
+        <div>
+          <div class="section-title">Hypothesized Causes</div>
+          <div class="tags">${j.causes.map(x=>`<span class="tag">${x}</span>`).join("")}</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-plan" class="panel" style="display:none;margin-top:10px">
+      <div class="section-title">Goals</div>
+      <div class="tags">${j.plan.goals.map(g=>`<span class="tag">${g}</span>`).join("")}</div>
+
+      <div class="progress-wrap"><div class="progress"><span id="bar" style="width:${pct}%"></span></div></div>
+
+      ${viewToggle.checked
+        ? `<div class="board">${boardCols}</div>`
+        : `<ul class="plan-list" id="plan-list">${actionsList}</ul>`}
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+        <div>
+          <div class="section-title">Coping</div>
+          <div class="tags">${j.plan.coping.map(c=>`<span class="tag">${c}</span>`).join("")}</div>
+        </div>
+        <div>
+          <div class="section-title">Reflect</div>
+          <div class="tags">${j.plan.reflect.map(c=>`<span class="tag">${c}</span>`).join("")}</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btn-copy">Copy Plan</button>
+        <button class="btn" id="btn-json">View JSON</button>
+        <button class="btn" id="btn-new">New Session</button>
+        <button class="btn" id="btn-helpful">This helped</button>
+        <button class="btn" id="btn-nothelp">Not helpful</button>
+      </div>
+      <div class="notice">We store this session locally. You can export or clear it.</div>
+    </div>
+  </div>`;
+
+  renderTabs();
+
+  out.querySelectorAll('input[type="checkbox"][data-plan]').forEach(cb=>{
+    cb.addEventListener('change', (e)=>{
+      const pk=e.target.getAttribute('data-plan'); const step=e.target.getAttribute('data-step');
+      savePlanProgress(`${pk}:${step}`, e.target.checked);
+      const prog=loadPlanProgress(pk); const doneNow=Object.values(prog).filter(Boolean).length;
+      const pctNow=percent(doneNow,total); document.getElementById("bar").style.width=pctNow+"%";
+      if(pctNow===100) confetti();
+    });
+  });
+  out.querySelectorAll('input.plan-note').forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      const pk=e.target.getAttribute('data-note'); const step=e.target.getAttribute('data-step');
+      savePlanNote(`${pk}:${step}`, e.target.value);
+    });
+  });
+
+  document.getElementById("btn-copy").onclick = ()=>{
+    const txt = formatPlanText(j, loadPlanNotes(planKey));
+    navigator.clipboard.writeText(txt).then(()=>showToast("Plan copied"));
+  };
+  document.getElementById("btn-json").onclick = ()=>{
+    const pretty = JSON.stringify(j, null, 2);
+    const w = window.open(); w.document.write(`<pre style="white-space:pre-wrap;word-wrap:break-word;background:#0b0b0c;color:#eee;padding:16px;margin:0">${escapeHtml(pretty)}</pre>`);
+  };
+  document.getElementById("btn-new").onclick = ()=>{ textEl.value=""; autosize(); out.innerHTML=""; textEl.focus(); };
+  document.getElementById("btn-helpful").onclick = ()=>sendFeedback(j.inference_id,1);
+  document.getElementById("btn-nothelp").onclick = ()=>sendFeedback(j.inference_id,0);
+}
+
+function renderTabs(){
+  const tabs=out.querySelectorAll(".tab"); const panels=out.querySelectorAll(".panel");
+  tabs.forEach(tab=>{ tab.onclick=()=>{ const name=tab.dataset.name; tabs.forEach(t=>t.classList.toggle("active", t===tab)); panels.forEach(p=>p.style.display=p.id===name?"block":"none"); }; });
+}
+
+function escapeHtml(s){ return s.replace(/[&<>'"]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;" }[c])); }
+function formatPlanText(j, notes){
+  const lines=[]; lines.push(`AURA Plan — Emotion: ${j.emotion} | Sentiment: ${j.sentiment}`);
+  lines.push(`Goals: ${j.plan.goals.join(", ")}`);
+  j.plan.actions.forEach((a,i)=>{ const k=`${j.inference_id}:${i}`; const n=notes[k]?` — Note: ${notes[k]}`:""; lines.push(`Day ${a.day}: ${a.task}${n}`); });
+  lines.push(`Coping: ${j.plan.coping.join(", ")}`); lines.push(`Reflect: ${j.plan.reflect.join(", ")}`); lines.push(`Metric: ${j.plan.metric}`); return lines.join("\n");
+}
+async function sendFeedback(id, helpful){
+  try{ const r=await fetch(api+"/feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({inference_id:id,helpful})}); if(r.ok) showToast("Thanks! Profile updated."); else showToast("Feedback failed."); }
+  catch{ showToast("Feedback failed."); }
+}
+
+/* Local storage: sessions + plan progress + notes */
+function loadSessions(){ try{ return JSON.parse(localStorage.getItem(SESS_KEY)||"[]"); }catch{ return []; } }
+function saveSession(j,text){ const list=loadSessions(); list.unshift({id:j.inference_id,ts:Date.now(),input:text.slice(0,220),emotion:j.emotion,sentiment:j.sentiment,facets:j.facets,distortions:j.distortions,data:j}); localStorage.setItem(SESS_KEY, JSON.stringify(list.slice(0,10))); }
+function renderHistory(){ const list=loadSessions(); historyEl.innerHTML=list.map(s=>`<div class="hist-card" data-id="${s.id}"><div><strong>${s.emotion}</strong> · <span class="meta">${s.sentiment}</span></div><div class="meta">${new Date(s.ts).toLocaleString()}</div><div class="meta">${escapeHtml(s.input)}</div></div>`).join(""); historyEl.querySelectorAll(".hist-card").forEach(card=>{ card.onclick=()=>{ const id=card.getAttribute("data-id"); const sess=loadSessions().find(x=>String(x.id)===String(id)); if(sess) renderResult(sess.data, sess.input); }; }); }
+function loadPlanProgressKey(){ try{ return JSON.parse(localStorage.getItem(PLAN_PROGRESS_KEY)||"{}"); }catch{ return {}; } }
+function savePlanProgress(key, checked){ const obj=loadPlanProgressKey(); obj[key]=checked?1:0; localStorage.setItem(PLAN_PROGRESS_KEY, JSON.stringify(obj)); }
+function loadPlanProgress(planKey){ const obj=loadPlanProgressKey(); const filtered={}; Object.keys(obj).forEach(k=>{ if(k.startsWith(planKey+":")) filtered[k]=obj[k]; }); return filtered; }
+function loadPlanNotesKey(){ try{ return JSON.parse(localStorage.getItem(PLAN_NOTES_KEY)||"{}"); }catch{ return {}; } }
+function savePlanNote(key,val){ const obj=loadPlanNotesKey(); obj[key]=val; localStorage.setItem(PLAN_NOTES_KEY, JSON.stringify(obj)); }
+function loadPlanNotes(planKey){ const obj=loadPlanNotesKey(); const filtered={}; Object.keys(obj).forEach(k=>{ if(k.startsWith(planKey+":")) filtered[k]=obj[k]; }); return filtered; }
+renderHistory();
+
+/* Command palette */
+const PALETTE=[{t:"Missed study deadlines",v:"I keep missing study deadlines and feel anxious"},{t:"Friend conflict",v:"I argue with my friend and it drains me"},{t:"Overwhelmed tasks",v:"I’m overwhelmed with tasks and can’t focus"},{t:"Money stress",v:"Money stress is making me panic"},{t:"Lonely unmotivated",v:"I feel lonely and unmotivated lately"},{t:"Action: New session",a:()=>{ textEl.value=""; out.innerHTML=""; textEl.focus(); }},{t:"Action: Export sessions",a:()=>document.getElementById("btn-export").click()}];
+function openCmdk(){ cmdk.style.display="flex"; cmdkInput.value=""; renderCmdk(""); cmdkInput.focus(); }
+function closeCmdk(){ cmdk.style.display="none"; }
+function renderCmdk(q){ const items=PALETTE.filter(x=>x.t.toLowerCase().includes(q.toLowerCase())); cmdkList.innerHTML=items.map((x,i)=>`<div class="cmdk-item" data-i="${i}">${x.t}</div>`).join(""); cmdkList.querySelectorAll(".cmdk-item").forEach(el=>{ el.onclick=()=>{ const i=+el.dataset.i; const it=items[i]; if(it.v){ textEl.value=it.v; autosize(); closeCmdk(); textEl.focus(); } else if(it.a){ it.a(); closeCmdk(); } }; }); }
+document.getElementById("btn-cmdk").onclick=openCmdk;
+cmdkInput.addEventListener("input", e=>renderCmdk(e.target.value));
+cmdk.addEventListener("click", e=>{ if(e.target===cmdk) closeCmdk(); });
+
+/* Confetti */
+function confetti(){
+  const c=document.createElement("canvas"); c.style.position="fixed"; c.style.inset="0"; c.style.zIndex="9"; c.style.pointerEvents="none"; document.body.appendChild(c);
+  const ctx=c.getContext("2d"); c.width=innerWidth; c.height=innerHeight;
+  const pieces=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,vx:(Math.random()-.5)*2,vy:1+Math.random()*3,size:4+Math.random()*4,rot:Math.random()*Math.PI,vr:(Math.random()-.5)*0.2,color:`hsl(${Math.random()*360},30%,70%)`}));
+  let t=0; (function draw(){ ctx.clearRect(0,0,c.width,c.height); pieces.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size); ctx.restore(); }); t++; if(t<180) requestAnimationFrame(draw); else document.body.removeChild(c); })();
+}
+</script>
+
+<script src="aura.js"></script>
+</body>
+</html>

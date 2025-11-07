@@ -1,0 +1,37 @@
+/* Layered, animated, mono background + tasteful motion */
+body::before{
+  content:"";position:fixed;inset:-20%;z-index:-1;
+  background:radial-gradient(40% 40% at 20% 10%, #1b2735 0%, transparent 60%),
+             radial-gradient(35% 35% at 80% 20%, #14202e 0%, transparent 60%),
+             radial-gradient(50% 50% at 50% 120%, #111722 0%, transparent 60%);
+  filter:blur(40px);opacity:.9;animation:floatBg 18s ease-in-out infinite alternate;
+}
+@keyframes floatBg{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-20px,0)}}
+
+/* Card entrance */
+.card{transform:translateY(6px);opacity:0;animation:cardIn .5s ease forwards}
+@keyframes cardIn{to{transform:none;opacity:1}}
+
+/* Buttons */
+button:hover{background:#15171d}
+button:active{transform:translateY(1px)}
+
+/* Tags pop-in */
+.tag{transform:scale(.95);opacity:0;animation:tagIn .35s ease forwards}
+@keyframes tagIn{to{transform:scale(1);opacity:1}}
+
+/* Analysis progress bar (top of output area) */
+.progress{height:4px;background:#1c1d21;border-radius:999px;overflow:hidden;margin-top:10px}
+.progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,#6ea8fe,#8ab4f8);box-shadow:0 0 12px #6ea8fe55 inset;transition:width .2s ease}
+
+/* Collapsible sections */
+.collapsible{overflow:hidden;transition:max-height .35s ease}
+.collapsible.open{border-color:#35373f}
+
+/* Skeletons + reduced motion */
+.skel-line{height:12px;background:linear-gradient(90deg,#17191f 25%,#1b1d23 37%,#17191f 63%);background-size:400% 100%;animation:sk 1.2s ease infinite}
+@keyframes sk{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
