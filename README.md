@@ -9,13 +9,34 @@ AURA (AI Root-Cause & Emotional Reasoning Assistant) runs locally with a FastAPI
 - Offline-friendly: Hugging Face pipelines load locally; no external services required
 
 ## Quickstart
+
+**One command (works on Windows, Mac, Linux):**
+```bash
+python run.py
+```
+
+On Unix systems, you can also make it executable:
+```bash
+chmod +x run.py
+./run.py
+```
+
+This will:
+- Check Python 3.10+ is installed
+- Create a virtual environment
+- Install all dependencies
+- Start the server on http://localhost:8000
+- Open the frontend in your browser
+
+**Alternative (manual setup):**
 ```bash
 python -m venv .venv
-. .venv/bin/activate
+# Windows: .venv\Scripts\activate
+# Mac/Linux: source .venv/bin/activate
 pip install -r backend/requirements.txt
-uvicorn app.main:app --app-dir backend/app --reload
+uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-Open `frontend/index.html` in a browser (CORS enabled for localhost).
+Then open `frontend/index.html` in your browser.
 
 ## API
 - `POST /analyze` `{text, user_id?, session_id?}` → inference payload
