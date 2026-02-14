@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
@@ -36,7 +36,7 @@ def tune_profile(delta: ProfileDelta, db: Session = Depends(get_db)):
     for k, v in delta.deltas.get("coping_prefs", {}).items():
         cp[k] = v
     p.emotion_weights, p.distortion_weights, p.coping_prefs = ew, dw, cp
-    p.last_updated = datetime.utcnow()
+    p.last_updated = datetime.now(timezone.utc)
     db.add(p)
     db.commit()
     db.refresh(p)

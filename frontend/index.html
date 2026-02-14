@@ -182,7 +182,7 @@ function autosize(){ textEl.style.height="auto"; textEl.style.height=Math.min(36
 textEl.addEventListener("input", ()=>{ autosize(); const t=textEl.value.toLowerCase(); hotline.style.display=crisisWords.some(x=>t.includes(x))?"block":"none";});
 autosize();
 
-document.getElementById("btn-clear").onclick=()=>{ textEl.value=""; autosize(); out.innerHTML=""; };
+document.getElementById("btn-clear").onclick=()=>{ textEl.value=""; autosize(); out.innerHTML=""; textEl.focus(); };
 document.getElementById("btn-export").onclick=()=>{ const data=JSON.stringify(loadSessions(),null,2); const blob=new Blob([data],{type:"application/json"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="aura_sessions.json"; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500); };
 document.getElementById("quick").addEventListener("click",(e)=>{ if(e.target.classList.contains("chip")){ textEl.value=e.target.textContent; autosize(); textEl.focus(); }});
 document.addEventListener("keydown",(e)=>{ if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ analyze(); } if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){ e.preventDefault(); openCmdk(); } if(e.key==="Escape"){ closeCmdk(); }});
@@ -214,7 +214,7 @@ async function analyze(){
     const j=await r.json();
     renderResult(j,text); saveSession(j,text); renderHistory();
     window.scrollTo({top:out.offsetTop-10, behavior:'smooth'});
-  }catch(err){ alert("Request failed: "+err.message+"\nMake sure the API is running at http://localhost:8000"); }
+  }catch(err){ const msg=err.message||"Unknown error"; alert("Request failed: "+msg+"\n\nEnsure the AURA server is running (python run.py)\nand that http://localhost:8000 is reachable."); }
   finally{ btn.disabled=false; btn.textContent="Analyze"; loader.style.display="none"; }
 }
 

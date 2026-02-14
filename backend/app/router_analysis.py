@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from .deps import get_db
 from .models import Inference, Message, SessionModel, User
-from .nlp import NLP
+from .nlp import get_nlp
 from .planning import plan_7day
 from .reasoning import hypothesize_causes
 from .schemas import AnalyzeRequest, AnalyzeResponse
@@ -11,7 +11,10 @@ from .settings import settings
 
 
 router = APIRouter()
-nlp = NLP(settings.sentiment_model, settings.zero_shot_model)
+
+
+def _nlp():
+    return get_nlp(settings.sentiment_model, settings.zero_shot_model)
 
 
 def get_or_create_user(db: Session, user_id=None):
@@ -45,6 +48,7 @@ def analyze(req: AnalyzeRequest, db: Session = Depends(get_db)):
     m = Message(session_id=s.id, role="user", text=req.text)
     db.add(m)
     db.commit()
+    nlp = _nlp()
     sentiment, emotion, facets, dists = nlp.analyze(req.text, topk=settings.topk)
     causes = hypothesize_causes(sentiment, emotion, facets, dists)
     plan = plan_7day(emotion, facets, dists, causes)

@@ -66,13 +66,13 @@ def install_deps():
     print("✅ Dependencies installed")
 
 def open_browser():
-    url = f"file://{FRONTEND_HTML.absolute()}"
+    url = FRONTEND_HTML.absolute().as_uri()
     print(f"🌐 Opening browser at {url}")
     try:
         webbrowser.open(url)
     except Exception as e:
         print(f"⚠️  Could not open browser automatically: {e}")
-        print(f"   Please open: {FRONTEND_HTML.absolute()}")
+        print(f"   Please open: {url}")
 
 def run_server():
     uvicorn = get_venv_uvicorn()
@@ -113,13 +113,13 @@ def main():
     print("=" * 50)
     print()
     
-    # Open browser after a short delay
+    # Open browser after server has time to start (models load on first request)
     import threading
     def delayed_open():
         import time
-        time.sleep(2)
+        time.sleep(5)
         open_browser()
-    
+
     threading.Thread(target=delayed_open, daemon=True).start()
     
     run_server()

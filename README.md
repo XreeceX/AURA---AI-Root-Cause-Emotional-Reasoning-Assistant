@@ -39,10 +39,13 @@ uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 Then open `frontend/index.html` in your browser.
 
 ## API
+- `GET /health` → quick health check (responds before models load)
 - `POST /analyze` `{text, user_id?, session_id?}` → inference payload
 - `POST /feedback` `{inference_id, helpful, notes?}` → feedback receipt + profile snapshot
 - `GET /profile/{user_id}` → current profile weights
 - `POST /profile/tune` `{user_id, deltas}` → manual profile adjustments
+
+**Note:** NLP models load lazily on the first `/analyze` request, so server startup is fast. The first analysis may take 30–60 seconds.
 
 ## Docker
 ```bash

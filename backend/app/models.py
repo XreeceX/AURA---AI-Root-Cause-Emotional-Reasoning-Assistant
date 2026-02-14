@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy import Column
@@ -9,13 +9,13 @@ from sqlmodel import Field, SQLModel
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     handle: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class SessionModel(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: Optional[int] = Field(default=None, foreign_key="user.id")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Message(SQLModel, table=True):
@@ -23,7 +23,7 @@ class Message(SQLModel, table=True):
     session_id: int = Field(foreign_key="sessionmodel.id")
     role: str
     text: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Inference(SQLModel, table=True):
@@ -36,7 +36,7 @@ class Inference(SQLModel, table=True):
     causes: List[str] = Field(default_factory=list, sa_column=Column(JSON))
     plan: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
     score: float = 0.0
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Feedback(SQLModel, table=True):
@@ -44,7 +44,7 @@ class Feedback(SQLModel, table=True):
     inference_id: int = Field(foreign_key="inference.id")
     helpful: int
     notes: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Profile(SQLModel, table=True):
@@ -53,5 +53,5 @@ class Profile(SQLModel, table=True):
     emotion_weights: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
     distortion_weights: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
     coping_prefs: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
-    last_updated: datetime = Field(default_factory=datetime.utcnow)
+    last_updated: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

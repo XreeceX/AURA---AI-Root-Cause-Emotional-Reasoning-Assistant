@@ -27,6 +27,7 @@ button:active{transform:translateY(1px)}
 /* Collapsible sections */
 .collapsible{overflow:hidden;transition:max-height .35s ease}
 .collapsible.open{border-color:#35373f}
+.collapsible-toggle{margin-top:8px;font-size:12px}
 
 /* Skeletons + reduced motion */
 .skel-line{height:12px;background:linear-gradient(90deg,#17191f 25%,#1b1d23 37%,#17191f 63%);background-size:400% 100%;animation:sk 1.2s ease infinite}

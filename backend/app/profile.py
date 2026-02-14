@@ -1,10 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timezone
+
+from sqlmodel import select
 
 from .models import Profile
 
 
 def get_or_create_profile(db, user_id):
-    p = db.query(Profile).where(Profile.user_id == user_id).first()
+    p = db.exec(select(Profile).where(Profile.user_id == user_id)).first()
     if p:
         return p
     p = Profile(user_id=user_id, emotion_weights={}, distortion_weights={}, coping_prefs={})
@@ -23,7 +25,7 @@ def update_profile_from_feedback(db, profile: Profile, inference, helpful: int):
         dw[d] = dw.get(d, 0) + (0.5 if helpful > 0 else -0.25)
     profile.emotion_weights = ew
     profile.distortion_weights = dw
-    profile.last_updated = datetime.utcnow()
+    profile.last_updated = datetime.now(timezone.utc)
     db.add(profile)
     db.commit()
     db.refresh(profile)
