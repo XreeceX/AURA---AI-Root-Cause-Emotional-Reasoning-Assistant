@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/aura.css",
+      "dest": "/frontend/aura.css"
+    },
+    {
+      "src": "/aura.js",
+      "dest": "/frontend/aura.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/index.html"
+    }
+  ]
+}

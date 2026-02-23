@@ -1,3 +1,7 @@
+from collections import defaultdict
+from typing import Any, Dict, List
+
+
 def plan_7day(emotion, facets, distortions, causes):
     goals = []
     actions = []
@@ -82,14 +86,11 @@ def plan_7day(emotion, facets, distortions, causes):
     }
 
 
-def _interleave_actions(actions: list) -> list:
+def _interleave_actions(actions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Distribute actions across days when multiple facet plans overlap."""
-    by_day = {}
+    by_day = defaultdict(list)
     for a in actions:
-        d = a["day"]
-        if d not in by_day:
-            by_day[d] = []
-        by_day[d].append(a["task"])
+        by_day[a["day"]].append(a["task"])
     result = []
     for day in sorted(by_day.keys()):
         for task in by_day[day]:

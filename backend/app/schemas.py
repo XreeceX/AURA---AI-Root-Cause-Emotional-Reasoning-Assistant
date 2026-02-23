@@ -1,12 +1,12 @@
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AnalyzeRequest(BaseModel):
     user_id: Optional[int] = None
     session_id: Optional[int] = None
-    text: str
+    text: str = Field(min_length=1)
 
 
 class AnalyzeResponse(BaseModel):
@@ -17,23 +17,23 @@ class AnalyzeResponse(BaseModel):
     distortions: List[str]
     facets: List[str]
     causes: List[str]
-    plan: Dict
+    plan: Dict[str, Any]
 
 
 class FeedbackRequest(BaseModel):
     inference_id: int
-    helpful: int
+    helpful: int = Field(ge=-1, le=1)
     notes: Optional[str] = None
 
 
 class ProfileDelta(BaseModel):
     user_id: int
-    deltas: Dict
+    deltas: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
 
 
 class ProfileOut(BaseModel):
     user_id: int
-    emotion_weights: Dict
-    distortion_weights: Dict
-    coping_prefs: Dict
+    emotion_weights: Dict[str, float]
+    distortion_weights: Dict[str, float]
+    coping_prefs: Dict[str, Any]
 

@@ -158,7 +158,7 @@ textarea:focus{box-shadow:0 0 0 2px rgba(255,255,255,.05), var(--ring)}
 <div class="toast" id="toast">Copied</div>
 
 <script>
-const api = (location.hostname==="localhost" || location.protocol==="file:")?"http://localhost:8000":"";
+const api = (location.hostname==="localhost" || location.protocol==="file:") ? "http://localhost:8000" : "/api";
 const crisisWords = ["suicide","kill myself","hurt myself","self-harm","end it","jump off","overdose"];
 const textEl = document.getElementById("text");
 const btn = document.getElementById("go");
@@ -214,7 +214,7 @@ async function analyze(){
     const j=await r.json();
     renderResult(j,text); saveSession(j,text); renderHistory();
     window.scrollTo({top:out.offsetTop-10, behavior:'smooth'});
-  }catch(err){ const msg=err.message||"Unknown error"; alert("Request failed: "+msg+"\n\nEnsure the AURA server is running (python run.py)\nand that http://localhost:8000 is reachable."); }
+  }catch(err){ const msg=err.message||"Unknown error"; alert("Request failed: "+msg+"\n\nFor local use, ensure the AURA server is running (python run.py)."); }
   finally{ btn.disabled=false; btn.textContent="Analyze"; loader.style.display="none"; }
 }
 

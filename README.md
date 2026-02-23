@@ -53,6 +53,23 @@ docker build -t aura .
 docker run -p 8000:8000 aura
 ```
 
+## Deploy on Vercel
+
+This repo is configured for Vercel with:
+- `api/index.py` as the Python serverless entrypoint
+- `vercel.json` routes (`/api/*` to backend, all other routes to frontend)
+
+### Steps
+1. Import this repo into Vercel
+2. Framework preset: **Other**
+3. Root directory: project root
+4. Deploy
+
+### Notes on "24/7"
+- Vercel serverless functions are **not always-on processes**. They spin up on request and may cold-start.
+- The serverless file system is ephemeral; SQLite is configured to use `/tmp/aura.db` on Vercel runtime.
+- For true persistent always-on backend + durable database, deploy backend on a long-running host (e.g. Railway/Render/Fly) and use Vercel for frontend.
+
 ## Safety Notes
 - Not therapy or medical care. Displayed warnings remind users to seek professional help for crises.
 - Data stays on-device. Clearing the browser cache removes UI-side session traces.
